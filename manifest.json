@@ -9,8 +9,11 @@
         "service_worker": "tabgroups.js"
     },
 
+    "options_page": "options.html",
+
     "permissions": [
         "tabGroups",
+        "storage",
         "tabs"
     ]
 }

@@ -1,22 +1,45 @@
-patterns = [
-    {
-        'pattern': 'atlassian.net/wiki',
-        'groupName': 'Confluence',
-        // Atlassian blue
-        'color': 'blue',
-    },
-    {
-        'pattern': 'atlassian.net',
-        'groupName': 'Jira',
-        // Atlassian blue
-        'color': 'blue',
-    },
-    {
-        'pattern': '^https?://www\.example\.com',
-        'groupName': 'Example',
-        'color': 'green',
-    }
+var rules = [];
+
+// From https://developer.chrome.com/docs/extensions/reference/tabGroups/#type-Color
+const valid_colors = [
+    "grey",
+    "blue",
+    "red",
+    "yellow",
+    "green",
+    "pink",
+    "purple",
+    "cyan",
 ]
+
+function parseRules(rulesText) {
+    rules = [];
+    for (const line of rulesText.split("\n")) {
+        // # denotes comments
+        if (line.startsWith("#")) { continue }
+
+        // Skip blank lines too
+        if (line == "") { continue }
+
+        // Whitespace separated pattern, group Name, color
+        let [pattern, groupName, color] = line.split(/\s+/)
+
+        // Check for a valid color, if specified
+        if (color && !valid_colors.includes(color)) {
+            console.log(`Invalid color: ${color}`);
+            // Treat invalid colors as if they were unspecified
+            color = undefined
+        }
+
+        // Make sure we have a valid pattern/name and skip if not
+        if (!pattern || !groupName) {
+            console.log(`Invalid rule (missing pattern or group name): ${rule}`)
+            continue
+        }
+
+        rules.push({pattern, groupName, color})
+    }
+}
 
 function addTabToGroup(tab, groupName, groupColor) {
     chrome.tabGroups.query({
@@ -46,6 +69,22 @@ function addTabToGroup(tab, groupName, groupColor) {
     });
 }
 
+chrome.storage.sync.get(['rules'], (result) => {
+    if (result.rules) {
+        parseRules(result.rules);
+    }
+});
+
+// Update the rules if they are changed (e.g. through the options page)
+chrome.storage.onChanged.addListener((changes) => {
+    if (changes.rules?.newValue) {
+        parseRules(changes.rules.newValue)
+    }
+})
+
+// TODO - look to see if a webNavigation event can be used instead? This would
+// allow event filters to be added based on the URL patterns that are
+// configured.
 chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {
     // Look for if the URL changed
     if (changeInfo.url) {
@@ -56,9 +95,9 @@ chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {
         if (tab.groupId != -1) { return }
 
         // Check for a pattern match
-        for (const p of patterns) {
-            if (changeInfo.url.match(p.pattern)) {
-                addTabToGroup(tab, p.groupName, p.color)
+        for (const r of rules) {
+            if (changeInfo.url.match(r.pattern)) {
+                addTabToGroup(tab, r.groupName, r.color)
                 break
             }
         }
