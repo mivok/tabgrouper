@@ -1,0 +1,16 @@
+{
+    "manifest_version": 3,
+    "name": "Tab Grouper",
+    "version": "0.0.1",
+
+    "description": "Automatically group tabs based on URL matches",
+
+    "background": {
+        "service_worker": "tabgroups.js"
+    },
+
+    "permissions": [
+        "tabGroups",
+        "tabs"
+    ]
+}
