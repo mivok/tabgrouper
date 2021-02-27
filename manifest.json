@@ -4,6 +4,11 @@
     "version": "0.0.1",
 
     "description": "Automatically group tabs based on URL matches",
+    "icons": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    },
 
     "background": {
         "service_worker": "tabgroups.js"
