@@ -6,31 +6,49 @@
                 font-size: 16px;
             }
 
-            textarea {
-                margin: 1em;
+            .container {
+                display: flex;
+            }
+
+            #help {
+                padding-left: 1em;
             }
 
             #message {
                 padding-left: 1em;
                 color: blue;
             }
+
+            #buttons {
+                margin: 1ex 0;
         </style>
     </head>
     <body>
-        <h1>Tab Grouper</h1>
-        <p>One rule per line. Rules look like <code>PATTERN TAB_GROUP_NAME
-            TAB_GROUP_COLOR</code>. Color is optional.</p>
-        <p>Pattern is a regular expression compared against the URL</p>
-        <p>Lines beginning with <code>#</code> are comments, and blank lines
-        are skipped.</p>
-        <p>Valid colors: grey, blue, red, yellow, green, pink, purple,
-        cyan. Invalid colors are treated as if you didn't specify a color.</p>
-        <div>
-            <button id="saveButton">Apply changes</button>
-            <button id="revertButton">Revert changes</button>
-            <span id="message"></span>
+        <h1>Rules</h1>
+        <div class="container">
+            <div id="rules_container">
+                <textarea id="rules" cols="80" rows="30"></textarea>
+                <div id="buttons">
+                    <button id="saveButton">Apply changes</button>
+                    <button id="revertButton">Revert changes</button>
+                    <span id="message"></span>
+                </div>
+            </div>
+            <div id="help">
+                <h2>How to write rules</h2>
+                <p>One rule per line.</p>
+                <p>Rules follow the format <code>PATTERN
+                    TAB_GROUP_NAME TAB_GROUP_COLOR</code>.
+                <p>Color is optional.</p>
+                <p>Pattern is a regular expression to be compared against the
+                URL</p>
+                <p>Lines beginning with <code>#</code> are comments, and blank
+                lines are skipped.</p>
+                <p>Valid colors: grey, blue, red, yellow, green, pink, purple,
+                cyan. Invalid colors are treated as if you didn't specify a
+                color.</p>
+            </div>
         </div>
-        <textarea id="rules" cols="120" rows="30"></textarea>
         <script src="options.js"></script>
     </body>
 </html>
