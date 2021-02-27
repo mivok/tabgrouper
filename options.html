@@ -40,13 +40,23 @@
                 <p>Rules follow the format <code>PATTERN
                     TAB_GROUP_NAME TAB_GROUP_COLOR</code>.
                 <p>Color is optional.</p>
-                <p>Pattern is a regular expression to be compared against the
-                URL</p>
+                <p>Pattern is a domain name and optional path. A domain and
+                any subdomains will match, and if you provide a path, then the
+                URL must start with that path also.
+                </p>
                 <p>Lines beginning with <code>#</code> are comments, and blank
                 lines are skipped.</p>
                 <p>Valid colors: grey, blue, red, yellow, green, pink, purple,
                 cyan. Invalid colors are treated as if you didn't specify a
                 color.</p>
+                <h2>Examples</h2>
+                <p><code>example.com Example pink</code> - Will group
+                example.com, www.example.com, foo.example.com in a tab group
+                called "Example", that is colored pink.</p>
+                <p><code>example.com/foo ExampleFoo</code> - Will group
+                example.com/foo, www.example.com/foo, and
+                example.com/foo/anything together but not example.com or
+                example.com/bar</p>
             </div>
         </div>
         <script src="options.js"></script>

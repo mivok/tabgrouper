@@ -39,6 +39,31 @@ function parseRules(rulesText) {
 
         rules.push({pattern, groupName, color})
     }
+    console.log("Updated rules")
+    console.log(rules)
+}
+
+function ruleMatch(url, pattern) {
+    // Checks to see if the given URL matches the pattern we provided
+    const parsedUrl = new URL(url);
+
+    const [domain, ...rest] = pattern.split('/')
+    const path = '/' + rest.join('/')
+
+    // First verify the path, if any, and reject if it doesn't match
+    if (path && !parsedUrl.pathname.startsWith(path)) {
+        return false
+    }
+
+    // Now check the domain (and any port if given)
+    // Exact domain match
+    if (parsedUrl.host == domain) { return true }
+
+    // Subdomain match
+    if (parsedUrl.host.endsWith('.' + domain)) { return true }
+
+    // We didn't get a match
+    return false
 }
 
 function addTabToGroup(tab, groupName, groupColor) {
@@ -91,12 +116,14 @@ chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {
         // Skip pinned tabs
         if (tab.pinned) { return }
 
+        // TODO - make this an option - e.g. github links from a jira page
+        // should go to the github tab group
         // Skip tabs already in a group
         if (tab.groupId != -1) { return }
 
         // Check for a pattern match
         for (const r of rules) {
-            if (changeInfo.url.match(r.pattern)) {
+            if (ruleMatch(changeInfo.url, r.pattern)) {
                 addTabToGroup(tab, r.groupName, r.color)
                 break
             }
