@@ -37,33 +37,54 @@ function parseRules(rulesText) {
             continue
         }
 
-        rules.push({pattern, groupName, color})
+        rules.push({
+            pattern,
+            regexp: patternToRegexp(pattern),
+            groupName,
+            color
+        })
     }
     console.log("Updated rules")
     console.log(rules)
 }
 
-function ruleMatch(url, pattern) {
+function patternToRegexp(pattern) {
     // Checks to see if the given URL matches the pattern we provided
-    const parsedUrl = new URL(url);
 
-    const [domain, ...rest] = pattern.split('/')
-    const path = '/' + rest.join('/')
-
-    // First verify the path, if any, and reject if it doesn't match
-    if (path && !parsedUrl.pathname.startsWith(path)) {
-        return false
+    // First check to see if the pattern is a regexp (starts/ends with a
+    // slash) and just strip the slashes if it is.
+    if (pattern.startsWith('/') && pattern.endsWith('/')) {
+        return new RegExp(pattern.slice(1,-1))
     }
 
-    // Now check the domain (and any port if given)
-    // Exact domain match
-    if (parsedUrl.host == domain) { return true }
+    // Otherwise, it's a regular pattern. Convert it to a regex and then
+    // return it.
 
-    // Subdomain match
-    if (parsedUrl.host.endsWith('.' + domain)) { return true }
+    // First, escape the pattern. This means all checks below that contain
+    // special characters (e.g. starts with ||) need to look for already
+    // escaped values.
+    let regex_pattern = pattern.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');;
 
-    // We didn't get a match
-    return false
+    // Deal with pipes at the beginning/end
+    if (regex_pattern.startsWith('\\|\\|')) {
+        // || is a substitute for http(s)://*
+        regex_pattern = '^https?://([^/:#?]+\\.)?' + regex_pattern.slice(4)
+    } else if (regex_pattern.startsWith('\\|')) {
+        // | is an anchor at the beginning
+        regex_pattern = '^' + regex_pattern.slice(2)
+    }
+    if (regex_pattern.endsWith('\\|')) {
+        // | is an anchor at the end too
+        regex_pattern = regex_pattern.slice(0,-2) + '$'
+    }
+
+    // Deal with asterisks (wildcards)
+    regex_pattern = regex_pattern.replace(/\\\*/g, '.*')
+
+    // Deal with ^ as a separator character
+    regex_pattern = regex_pattern.replace(/\\\^/g, '([^0-9a-zA-Z_.%-]|$)')
+
+    return new RegExp(regex_pattern)
 }
 
 function addTabToGroup(tab, groupName, groupColor) {
@@ -123,7 +144,7 @@ chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {
 
         // Check for a pattern match
         for (const r of rules) {
-            if (ruleMatch(changeInfo.url, r.pattern)) {
+            if (r.regexp.test(changeInfo.url)) {
                 addTabToGroup(tab, r.groupName, r.color)
                 break
             }
