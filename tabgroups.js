@@ -15,8 +15,9 @@ const valid_colors = [
 function parseRules(rulesText) {
     rules = [];
     for (const line of rulesText.split("\n")) {
-        // # denotes comments
+        // # or ! denotes comments
         if (line.startsWith("#")) { continue }
+        if (line.startsWith("!")) { continue }
 
         // Skip blank lines too
         if (line == "") { continue }

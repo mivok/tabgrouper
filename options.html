@@ -39,24 +39,32 @@
                 <p>One rule per line.</p>
                 <p>Rules follow the format <code>PATTERN
                     TAB_GROUP_NAME TAB_GROUP_COLOR</code>.
-                <p>Color is optional.</p>
-                <p>Pattern is a domain name and optional path. A domain and
-                any subdomains will match, and if you provide a path, then the
-                URL must start with that path also.
+                <p>Color is optional.  Valid colors: grey, blue, red, yellow,
+                green, pink, purple, cyan. Invalid colors are treated as if
+                you didn't specify a color.</p>
+                <p>Patterns follow a similar format to that used for adblock
+                rules. See <a href="https://kb.adguard.com/en/general/how-to-create-your-own-ad-filters#basic-rules-syntax">The
+                    AdGuard filter documentation</a> for more details.
                 </p>
-                <p>Lines beginning with <code>#</code> are comments, and blank
-                lines are skipped.</p>
-                <p>Valid colors: grey, blue, red, yellow, green, pink, purple,
-                cyan. Invalid colors are treated as if you didn't specify a
-                color.</p>
-                <h2>Examples</h2>
-                <p><code>example.com Example pink</code> - Will group
-                example.com, www.example.com, foo.example.com in a tab group
-                called "Example", that is colored pink.</p>
-                <p><code>example.com/foo ExampleFoo</code> - Will group
-                example.com/foo, www.example.com/foo, and
-                example.com/foo/anything together but not example.com or
-                example.com/bar</p>
+                <p>If no special characters are given, the pattern must appear
+                somewhere in the URL</p>
+                <p>A pipe (|) at the beginning or end means that the URL must
+                start or end with the following/preceding text (in other
+                words, the pipe symbol anchors the pattern to the
+                beginning/end)</p>
+                <p>A double pipe (||) at the beginning means the following
+                text is the domain name. With this you don't have to specify
+                http:// or https:// or any subdomains at the beginning in
+                order to match.</p>
+                <p>If you just want to match a domain, putting || at the
+                beginning is probably what you want</p>
+                <p>Asterisks (*) are wildcards and match any text</p>
+                <p>Carets (^) are separator characters, and can be used in
+                place of a slash (/) to match URL separators. It also matches
+                the end of the URL as well as other special characters such as
+                ?, # or :.</p>
+                <p>Lines beginning with <code>!</code> or <code>#</code> are
+                comments, and blank lines are skipped.</p>
             </div>
         </div>
         <script src="options.js"></script>
