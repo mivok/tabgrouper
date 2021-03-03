@@ -1,5 +1,7 @@
 var rules = [];
 
+var options = {};
+
 // From https://developer.chrome.com/docs/extensions/reference/tabGroups/#type-Color
 const valid_colors = [
     "grey",
@@ -116,17 +118,30 @@ function addTabToGroup(tab, groupName, groupColor) {
     });
 }
 
-chrome.storage.sync.get(['rules'], (result) => {
-    if (result.rules) {
-        parseRules(result.rules);
-    }
+// Load options/rules
+chrome.storage.sync.get(null, (result) => {
+    Object.keys(result).forEach((key) => {
+        if (key == 'rules') {
+            parseRules(result.rules);
+        } else {
+            // Anything else in storage is an option
+            options[key] = result[key]
+        }
+    });
 });
 
-// Update the rules if they are changed (e.g. through the options page)
+// Update options/rules if they are changed (e.g. through the options page)
 chrome.storage.onChanged.addListener((changes) => {
-    if (changes.rules?.newValue) {
-        parseRules(changes.rules.newValue)
-    }
+    Object.keys(changes).forEach((key) => {
+        if (key == 'rules') {
+            if (changes.rules.newValue) {
+                parseRules(changes.rules.newValue)
+            }
+        } else {
+            // Anything else in storage is an option
+            options[key] = changes[key].newValue
+        }
+    })
 })
 
 // TODO - look to see if a webNavigation event can be used instead? This would
@@ -138,10 +153,10 @@ chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {
         // Skip pinned tabs
         if (tab.pinned) { return }
 
-        // TODO - make this an option - e.g. github links from a jira page
-        // should go to the github tab group
         // Skip tabs already in a group
-        if (tab.groupId != -1) { return }
+        if (options.ignore_already_grouped && tab.groupId != -1) {
+            return
+        }
 
         // Check for a pattern match
         for (const r of rules) {

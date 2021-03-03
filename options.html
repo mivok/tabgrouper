@@ -15,27 +15,36 @@
             }
 
             #message {
-                padding-left: 1em;
-                color: blue;
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                padding: 1em;
+                color: white;
+                background: #69f;
+                display: none;
             }
 
             #buttons {
                 margin: 1ex 0;
+            }
         </style>
     </head>
     <body>
-        <h1>Rules</h1>
+        <div id="message"></div>
         <div class="container">
             <div id="rules_container">
+                <h1>Rules</h1>
                 <textarea id="rules" cols="80" rows="30"></textarea>
                 <div id="buttons">
                     <button id="saveButton">Apply changes</button>
                     <button id="revertButton">Revert changes</button>
-                    <span id="message"></span>
+                </div>
+                <div id="options">
+                    <h2>Options</h2>
                 </div>
             </div>
             <div id="help">
-                <h2>How to write rules</h2>
+                <h1>How to write rules</h1>
                 <p>One rule per line.</p>
                 <p>Rules follow the format <code>PATTERN
                     TAB_GROUP_NAME TAB_GROUP_COLOR</code>.
