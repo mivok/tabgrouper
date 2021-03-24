@@ -2,13 +2,13 @@
 
 [![Available in the Chrome Web Store](images/webstore_badge.png)](https://chrome.google.com/webstore/detail/tab-grouper/cejjplkmdfnnlmphbhpbnfmkhkknnokg)
 
+Automatically manage your tab groups in chrome based on the websites you visit and rules you define.
 
-Tab grouper is a chrome extension that allows you to automatically group all
-tabs that match a given URL pattern. You create rules for each website saying
-which URL pattern to match, the name of the tab group, and optionally a color,
-and the extension will add matching websites to the appropriate tab groups as
-you browse to them. For example, you could have all jira tickets in a single
-group, all amazon pages in another, and all google search results in another.
+Tab grouper lets you create rules for each website saying which URL pattern to
+match, the name of the tab group, and optionally a color, and the extension
+will add matching websites to the appropriate tab groups as you browse to
+them. For example, you could have all jira tickets in a single group, all
+amazon pages in another, and all google search results in another.
 
 ## Creating rules
 

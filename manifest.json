@@ -3,7 +3,7 @@
     "name": "Tab Grouper",
     "version": "0.0.1",
 
-    "description": "Automatically group tabs based on URL matches",
+    "description": "Automatically manage your tab groups in chrome based on the websites you visit and rules you define",
     "icons": {
         "16": "icons/icon16.png",
         "48": "icons/icon48.png",
