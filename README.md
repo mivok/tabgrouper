@@ -1,5 +1,8 @@
 # Tab grouper
 
+[![Available in the Chrome Web Store](images/webstore_badge.png)](https://chrome.google.com/webstore/detail/tab-grouper/cejjplkmdfnnlmphbhpbnfmkhkknnokg)
+
+
 Tab grouper is a chrome extension that allows you to automatically group all
 tabs that match a given URL pattern. You create rules for each website saying
 which URL pattern to match, the name of the tab group, and optionally a color,
