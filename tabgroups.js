@@ -66,7 +66,9 @@ function parseRules(rulesText) {
     if (line === '') { return; }
 
     // Whitespace separated pattern, group Name, color
-    const parts = line.split(/\s+/);
+    // use quotes if you need to have whitespace in the group name
+    const parts = line.match(/[^\s"]+|"[^"]*"/g).map(
+      s => s.replace(/(^"|"$)/g, ''));
     const [pattern, groupName] = parts;
     let [, , color] = parts;
 
