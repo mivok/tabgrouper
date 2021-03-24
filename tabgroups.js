@@ -16,6 +16,22 @@ const validColors = [
   'cyan',
 ];
 
+// Logging functions
+function log(level, message) {
+  const entry = { date: new Date().toISOString(), level, message };
+  chrome.storage.local.get('log', (result) => {
+    chrome.storage.local.set({ log: (result.log || []).concat(entry) });
+  });
+}
+
+function debug(message) {
+  log('debug', message);
+}
+
+function error(message) {
+  log('error', message);
+}
+
 function patternToRegexp(pattern) {
   // Checks to see if the given URL matches the pattern we provided
 
@@ -68,20 +84,21 @@ function parseRules(rulesText) {
     // Whitespace separated pattern, group Name, color
     // use quotes if you need to have whitespace in the group name
     const parts = line.match(/[^\s"]+|"[^"]*"/g).map(
-      s => s.replace(/(^"|"$)/g, ''));
+      (s) => s.replace(/(^"|"$)/g, '')
+    );
     const [pattern, groupName] = parts;
     let [, , color] = parts;
 
     // Check for a valid color, if specified
     if (color && !validColors.includes(color)) {
-      console.log(`Invalid color: ${color}`);
+      error(`Invalid color: ${color}`);
       // Treat invalid colors as if they were unspecified
       color = undefined;
     }
 
     // Make sure we have a valid pattern/name and skip if not
     if (!pattern || !groupName) {
-      console.log(`Invalid rule (missing pattern or group name): ${pattern}`);
+      error(`Invalid rule (missing pattern or group name): ${pattern}`);
       return;
     }
 
@@ -92,8 +109,7 @@ function parseRules(rulesText) {
       color,
     });
   });
-  console.log('Updated rules');
-  console.log(rules);
+  debug(`Updated rules:\n${rules.map((r) => JSON.stringify({ ...r, regexp: r.regexp.toString() })).join('\n')}`);
 }
 
 function addTabToGroup(tab, groupName, groupColor) {
@@ -148,6 +164,11 @@ chrome.storage.onChanged.addListener((changes) => {
       options[key] = changes[key].newValue;
     }
   });
+});
+
+chrome.runtime.onStartup.addListener(() => {
+  // Clear any log entries from a previous run on chrome startup
+  chrome.storage.local.set({log: []});
 });
 
 chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {

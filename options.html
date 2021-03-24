@@ -27,6 +27,10 @@
             #buttons {
                 margin: 1ex 0;
             }
+
+            .hidden {
+                display: none;
+            }
         </style>
     </head>
     <body>
@@ -41,6 +45,12 @@
                 </div>
                 <div id="options">
                     <h2>Options</h2>
+                </div>
+                <div id="logArea">
+                    <h2>Logs</h2>
+                    <button id="logButton">Show log</button>
+                    <button id="clearLogButton">Clear log</button>
+                    <textarea id="log" class="hidden" cols="80" rows="5"></textarea>
                 </div>
             </div>
             <div id="help">
