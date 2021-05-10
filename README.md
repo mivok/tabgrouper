@@ -66,3 +66,10 @@ The pattern format is as follows:
 You can also match URLs based on regular expressions. To do this, surround your
 pattern with `/`. For example `/^https?://google.com/?$/`. You don't need to
 escape slashes inside the regular expression.
+
+## Temporarily disabling automatic tab grouping
+
+If you want to stop automatically grouping tabs temporarily, click on the
+extension's icon. The icon will then show "Off" in a badge to show that
+automatic tab grouping is disabled. Clicking the icon again will re-enable
+automatic grouping.

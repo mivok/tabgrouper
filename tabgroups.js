@@ -84,7 +84,7 @@ function parseRules(rulesText) {
     // Whitespace separated pattern, group Name, color
     // use quotes if you need to have whitespace in the group name
     const parts = line.match(/[^\s"]+|"[^"]*"/g).map(
-      (s) => s.replace(/(^"|"$)/g, '')
+      (s) => s.replace(/(^"|"$)/g, ''),
     );
     const [pattern, groupName] = parts;
     let [, , color] = parts;
@@ -152,6 +152,11 @@ chrome.storage.sync.get(null, (result) => {
   });
 });
 
+// Load the extension enabled/disabled state
+chrome.storage.local.get('disabled', (result) => {
+  options.disabled = result.disabled;
+});
+
 // Update options/rules if they are changed (e.g. through the options page)
 chrome.storage.onChanged.addListener((changes) => {
   Object.keys(changes).forEach((key) => {
@@ -168,12 +173,22 @@ chrome.storage.onChanged.addListener((changes) => {
 
 chrome.runtime.onStartup.addListener(() => {
   // Clear any log entries from a previous run on chrome startup
-  chrome.storage.local.set({log: []});
+  chrome.storage.local.set({ log: [] });
+});
+
+chrome.action.onClicked.addListener(() => {
+  chrome.action.setBadgeText({ text: options.disabled ? '' : 'Off' });
+  // The event handler above will set the options hash automatically, so we
+  // just need to update local storage
+  chrome.storage.local.set({ disabled: !options.disabled });
 });
 
 chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {
   // Look for if the URL changed
   if (changeInfo.url) {
+    // Skip if the extension is disabled
+    if (options.disabled) { return; }
+
     // Skip pinned tabs
     if (tab.pinned) { return; }
 

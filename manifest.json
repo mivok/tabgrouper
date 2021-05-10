@@ -10,6 +10,8 @@
         "128": "icons/icon128.png"
     },
 
+    "action": {},
+
     "background": {
         "service_worker": "tabgroups.js"
     },
