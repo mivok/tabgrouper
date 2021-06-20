@@ -97,7 +97,7 @@ function parseRules(rulesText) {
     }
 
     // Make sure we have a valid pattern/name and skip if not
-    if (!pattern || !groupName) {
+    if (!pattern || groupName === undefined) {
       error(`Invalid rule (missing pattern or group name): ${pattern}`);
       return;
     }
