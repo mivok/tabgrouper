@@ -16,14 +16,19 @@ Before you use this extension, you need to create a set of rules for which
 sites to group into which tabs. Go to the extension options, and there is a
 textbox where you can add the list of rules.
 
-Here's an example of a rule:
+Here are some examples of rules:
 
 ```
-||google.com Google blue
+||google.com Google grey
+||example.atlassian.net "Company JIRA" blue
+||unnamed.example.com ""
 ```
 
-It means group all google web pages (anything at google.com) in a tab group
-called "Google" and color the tab group blue.
+The first example groups all google web pages (anything at google.com) in a tab
+group called "Google" and colors the tab group grey.
+
+The last example creates an unnamed tab group using empty quotes. It will also
+have a default color assigned as none was specified.
 
 Rules consist of a pattern (the `||google.com` part), the name of the tab
 group to group matching tabs under, and an optional color for the tab group to
