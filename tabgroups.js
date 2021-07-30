@@ -115,6 +115,7 @@ function parseRules(rulesText) {
 function addTabToGroup(tab, groupName, groupColor) {
   chrome.tabGroups.query({
     title: groupName,
+    color: groupColor,
     windowId: tab.windowId,
   }, (groups) => {
     if (groups.length > 0) {
